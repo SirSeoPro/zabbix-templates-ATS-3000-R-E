@@ -1,0 +1,318 @@
+zabbix_export:
+  version: '7.4'
+  template_groups:
+    - uuid: 7dff9e010d7d4a91bacc6b42db5964a3
+      name: Templates/Our
+  templates:
+    - uuid: 676d20b4c7c84e42964f2866cd92937f
+      template: 'Lo_Convers ATS 3000'
+      name: 'Lo_Convers ATS 3000'
+      groups:
+        - name: Templates/Our
+      items:
+        - uuid: 29f56e4b2b4248db8cfc8197511e0868
+          name: 'Battery Capacity'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.22138.1.10.3.4.4
+          key: batteryCapacity
+          history: 90d
+          units: '%'
+          tags:
+            - tag: Application
+              value: '02 - Battery Status'
+          triggers:
+            - uuid: 798f9a9055c94425a432d028d2a55db0
+              expression: 'last(/Lo_Convers ATS 3000/batteryCapacity)<10'
+              name: 'Battery Critical < 10%'
+              priority: DISASTER
+            - uuid: 9035f6b8211e4b8bbd11c5f257688b72
+              expression: 'last(/Lo_Convers ATS 3000/batteryCapacity)<20'
+              name: 'Battery Low < 20%'
+              priority: WARNING
+        - uuid: dbb5df219687429e9e926425c16d3026
+          name: 'Battery Runtime'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.22138.1.10.3.4.3
+          key: batteryRuntime
+          delay: 5m
+          history: 90d
+          units: min
+          tags:
+            - tag: Application
+              value: '02 - Battery Status'
+          triggers:
+            - uuid: 7fbce09c3d674773add6df1074852ef8
+              expression: 'last(/Lo_Convers ATS 3000/batteryRuntime)<5'
+              name: 'Battery Runtime < 5 min'
+              priority: HIGH
+        - uuid: becfc1dff0424e4a8288a34ef1568479
+          name: 'Battery Voltage'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.22138.1.10.3.4.2
+          key: batteryVoltage
+          delay: 5m
+          history: 90d
+          value_type: FLOAT
+          units: V
+          preprocessing:
+            - type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            - tag: Application
+              value: '02 - Battery Status'
+        - uuid: fa1d0b21f58c42068244afe6f01f1989
+          name: 'Input Frequency'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.22138.1.10.3.1.7
+          key: inputFrequency
+          delay: 5m
+          history: 90d
+          value_type: FLOAT
+          units: Hz
+          preprocessing:
+            - type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            - tag: Application
+              value: '03 - Input'
+        - uuid: 208980becafe4b47b0126f95c4e33182
+          name: 'Input Voltage Phase 1'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.22138.1.10.3.1.1
+          key: inputVoltagePhase1
+          delay: 5m
+          history: 90d
+          value_type: FLOAT
+          units: V
+          preprocessing:
+            - type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            - tag: Application
+              value: '03 - Input'
+          triggers:
+            - uuid: 4bd007511c674619a9cf550502173570
+              expression: 'last(/Lo_Convers ATS 3000/inputVoltagePhase1)<205 or last(/Lo_Convers ATS 3000/inputVoltagePhase1)>235'
+              name: 'Input Voltage Phase 1 Out of Range'
+              priority: INFO
+        - uuid: 90b76903d1a040d2adc39cdd890830ce
+          name: 'Internal Temperature'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.22138.1.10.3.4.1
+          key: internalTemperature
+          delay: 5m
+          history: 90d
+          value_type: FLOAT
+          units: °C
+          preprocessing:
+            - type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            - tag: Application
+              value: '02 - Battery Status'
+          triggers:
+            - uuid: a8d5b9bc54f4429584db5dab396c87c2
+              expression: 'last(/Lo_Convers ATS 3000/internalTemperature)>60'
+              name: 'Internal Temperature High > 60°C'
+              priority: HIGH
+        - uuid: ca31ccc445e74cdbb15431fec09716bd
+          name: 'Output Current Total'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.22138.1.10.3.3.8
+          key: outputCurrentTotal
+          delay: 5m
+          history: 90d
+          value_type: FLOAT
+          units: A
+          preprocessing:
+            - type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            - tag: Application
+              value: '04 - Output'
+        - uuid: 57539feb6a4646aeab383e6e189803bf
+          name: 'Output Frequency'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.22138.1.10.3.3.7
+          key: outputFrequency
+          delay: 5m
+          history: 90d
+          value_type: FLOAT
+          units: Hz
+          preprocessing:
+            - type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            - tag: Application
+              value: '04 - Output'
+        - uuid: 0abd2d66aab14ed6ae3c4140cccb57d8
+          name: 'Output Load Percent'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.22138.1.10.3.3.12
+          key: outputLoadPercent
+          delay: 5m
+          history: 90d
+          units: '%'
+          tags:
+            - tag: Application
+              value: '04 - Output'
+          triggers:
+            - uuid: 138104992ef3439bb341b9c32fc93614
+              expression: 'last(/Lo_Convers ATS 3000/outputLoadPercent)>95'
+              name: 'Output Load > 95%'
+              priority: HIGH
+        - uuid: 412c65b8bd9a4fa489540b3fd5e40e81
+          name: 'Output Voltage Phase 1'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.22138.1.10.3.3.1
+          key: outputVoltagePhase1
+          delay: 5m
+          history: 90d
+          value_type: FLOAT
+          units: V
+          preprocessing:
+            - type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            - tag: Application
+              value: '04 - Output'
+          triggers:
+            - uuid: 0616eb1209284b008680b1d4e3607940
+              expression: 'last(/Lo_Convers ATS 3000/outputVoltagePhase1)<205 or last(/Lo_Convers ATS 3000/outputVoltagePhase1)>235'
+              name: 'Output Voltage Phase 1 Out of Range'
+              priority: INFO
+        - uuid: 7289e73713b6491ca6ab6a54251510fe
+          name: 'System Contact'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.1.4.0
+          key: sysContact
+          delay: 1d
+          history: 90d
+          value_type: CHAR
+          tags:
+            - tag: Application
+              value: '01 - Overview'
+        - uuid: 50224d5619ea42ddb7660d37849167ac
+          name: 'System Location'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.1.6.0
+          key: sysLocation
+          delay: 1d
+          history: 90d
+          value_type: CHAR
+          tags:
+            - tag: Application
+              value: '01 - Overview'
+        - uuid: 62a3397f1dc647f19b526ad04cf0fa6b
+          name: 'System Name'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.1.5.0
+          key: sysName
+          delay: 1d
+          history: 90d
+          value_type: CHAR
+          tags:
+            - tag: Application
+              value: '01 - Overview'
+        - uuid: f704f671953e4ccaabdaf703f2f8c266
+          name: 'System Up Time'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.1.3.0
+          key: sysUpTime
+          history: 90d
+          units: uptime
+          preprocessing:
+            - type: MULTIPLIER
+              parameters:
+                - '0.01'
+          tags:
+            - tag: Application
+              value: '01 - Overview'
+        - uuid: d5cb0bdf955c45b79d1783b4a8a4d0eb
+          name: 'UPS Connection Status'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.22138.1.10.1.1
+          key: upsConnectionStatus
+          history: 90d
+          valuemap:
+            name: ups_connection_status
+          tags:
+            - tag: Application
+              value: '02 - Status'
+          triggers:
+            - uuid: 293bf944e75e4949904dd38c0ddab6fe
+              expression: 'last(/Lo_Convers ATS 3000/upsConnectionStatus)=0'
+              name: 'UPS Disconnected'
+              priority: HIGH
+              description: 'UPS Connection Status is disconnected'
+        - uuid: 52fd4294c70847069867480222029489
+          name: 'UPS Model Name'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.22138.1.10.2.1
+          key: upsModelName
+          delay: 1d
+          history: 90d
+          value_type: CHAR
+          tags:
+            - tag: Application
+              value: '01 - Overview'
+        - uuid: ae80a446253f43e8a01dea3e09d8e0c2
+          name: 'UPS Mode Status'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.22138.1.10.1.2
+          key: upsModeStatus
+          history: 90d
+          valuemap:
+            name: ups_mode_status
+          tags:
+            - tag: Application
+              value: '02 - Status'
+          triggers:
+            - uuid: f13b6749b4a44a8d862769ff8171233f
+              expression: 'last(/Lo_Convers ATS 3000/upsModeStatus)=6'
+              name: 'UPS in Fault Mode'
+              priority: DISASTER
+              description: 'UPS Mode is Fault'
+            - uuid: 0089cb6e27214a3686d99f50893c5a56
+              expression: 'last(/Lo_Convers ATS 3000/upsModeStatus)=4'
+              name: 'UPS on Battery'
+              priority: HIGH
+              description: 'UPS Mode is Battery'
+      valuemaps:
+        - uuid: c7d1d706232d4c3ba6050421f16482f8
+          name: ups_connection_status
+          mappings:
+            - value: '0'
+              newvalue: Offline
+            - value: '1'
+              newvalue: Online
+        - uuid: d3df08758dc04df1bff9d1507215ee7f
+          name: ups_mode_status
+          mappings:
+            - value: '0'
+              newvalue: PowerOn
+            - value: '1'
+              newvalue: Standby
+            - value: '2'
+              newvalue: Bypass
+            - value: '3'
+              newvalue: OnLine
+            - value: '4'
+              newvalue: 'On Battery'
+            - value: '5'
+              newvalue: 'Test Battery'
+            - value: '6'
+              newvalue: Fai;ure
+            - value: '7'
+              newvalue: ECO
+            - value: '8'
+              newvalue: Converter
+            - value: '9'
+              newvalue: Shutdown
